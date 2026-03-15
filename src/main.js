@@ -312,7 +312,7 @@ function loadModel(model) {
     const finalBox = new THREE.Box3().setFromObject(object);
     const modelCenter = finalBox.getCenter(new THREE.Vector3());
     controls.target.copy(modelCenter);
-    camera.position.set(modelCenter.x, modelCenter.y + 1, modelCenter.z + 3);
+    camera.position.set(modelCenter.x, modelCenter.y + 1, modelCenter.z - 3);
     controls.update();
 
     const materialMode = document.querySelector('input[name="material-mode"]:checked')?.value;
