@@ -279,7 +279,6 @@ export default defineConfig({
       closeBundle() {
         const outDir = path.resolve(__dirname, 'dist');
         if (fs.existsSync(outDir) && fs.existsSync(modelsPath)) {
-          copyDirSync(modelsPath, path.join(outDir, 'models'));
           rescanModels();
           fs.copyFileSync(modelsJsonPath, path.join(outDir, 'models.json'));
         }

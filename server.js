@@ -13,7 +13,9 @@ import AdmZip from 'adm-zip';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPath = path.resolve(__dirname, 'dist');
-const modelsPath = path.resolve(distPath, 'models');
+const modelsPath = process.env.MODELS_PATH
+  ? path.resolve(process.env.MODELS_PATH)
+  : path.resolve(__dirname, 'models');
 const modelsJsonPath = path.resolve(distPath, 'models.json');
 const publicDir = distPath;
 
@@ -244,7 +246,7 @@ app.get('*', (req, res) => {
 const PORT = parseInt(process.env.PORT || '3000', 10);
 app.listen(PORT, () => {
   console.log(`3D Model Viewer server running at http://localhost:${PORT}`);
-  console.log(`Ensure you have run: npm run build`);
+  console.log(`Models path: ${modelsPath}`);
   if (!fs.existsSync(distPath)) {
     console.warn('Warning: dist/ folder not found. Run "npm run build" first.');
   }

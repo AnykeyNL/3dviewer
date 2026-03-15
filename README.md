@@ -25,18 +25,21 @@ Open http://localhost:8081
 
 ## Model Structure
 
-Models are organized by **project** folders. Each project folder contains **zip files** of models:
+Models are stored in a single location (no duplication). By default: `models/` in the project root.
 
 ```
 models/
   [project]/
-    model1.zip
-    model2.zip
+    model1_30k.zip
+    model1_1M.zip
+    model1_photos.zip
   [project2]/
-    model1.zip
+    ...
 ```
 
 Each zip file contains a 3D model (OBJ, MTL, textures). The zip can have any structure; the first `.obj` file found is used.
+
+**Custom location**: Set `MODELS_PATH` to an absolute path, e.g. `MODELS_PATH=/data/3d-models npm start`
 
 ## Adding Models
 
