@@ -87,3 +87,16 @@ The app is built to run at `/models` (e.g. https://yoursite.com/models/).
 4. Reload Apache: `systemctl reload apache2`
 
 5. Keep the Node process running (e.g. with systemd, pm2, or screen).
+
+### Systemd service (Ubuntu)
+
+1. Edit `3dviewer.service` – set `User`, `WorkingDirectory`, and optionally `MODELS_PATH`.
+2. Install the service:
+   ```bash
+   sudo cp 3dviewer.service /etc/systemd/system/
+   sudo systemctl daemon-reload
+   sudo systemctl enable 3dviewer
+   sudo systemctl start 3dviewer
+   ```
+3. Check status: `sudo systemctl status 3dviewer`
+4. View logs: `journalctl -u 3dviewer -f`

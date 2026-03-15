@@ -1,0 +1,19 @@
+[Unit]
+Description=3D Model Viewer
+After=network.target
+
+[Service]
+Type=simple
+User=3dmij
+WorkingDirectory=/home/3dmij/3dviewer
+# Use full path from: which node  (if using nvm, e.g. /home/3dmij/.nvm/versions/node/v20.x.x/bin/node)
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+# Optional: use a custom models path
+# Environment=MODELS_PATH=/home/3dmij/3dviewer/models
+
+[Install]
+WantedBy=multi-user.target
