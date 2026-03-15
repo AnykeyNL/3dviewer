@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 
+const base = (import.meta.env.BASE_URL || '/').replace(/\/*$/, '/');
+
 let scene, camera, renderer, controls;
 let currentModel = null;
 let meshMaterials = new Map();
@@ -51,6 +53,19 @@ function init() {
 
   window.addEventListener('resize', onResize);
 
+  // Load logo
+  fetch(`${base}logo.json`).then((r) => (r.ok ? r.json() : null)).then((data) => {
+    if (data?.path) {
+      const img = document.getElementById('header-logo');
+      if (img) {
+        img.src = `${base}${data.path.replace(/^\//, '')}${data.t ? `?t=${data.t}` : ''}`;
+        img.alt = 'Logo';
+        img.classList.remove('hidden');
+        document.getElementById('header-title')?.classList.add('hidden');
+      }
+    }
+  }).catch(() => {});
+
   // Project prompt
   setupProjectPrompt();
 
@@ -98,7 +113,7 @@ function setupProjectPrompt() {
     const project = (input.value || '').trim();
     if (!project) return;
     errorEl.classList.add('hidden');
-    fetch('/models.json')
+    fetch(`${base}models.json`)
       .then((r) => r.json())
       .then((allModels) => {
         const list = Array.isArray(allModels)
@@ -139,7 +154,7 @@ function setupProjectPrompt() {
 }
 
 function getDownloadUrl(project, zipName) {
-  return `/api/download/zip/${encodeURIComponent(project)}/${encodeURIComponent(zipName + '.zip')}`;
+  return `${base}api/download/zip/${encodeURIComponent(project)}/${encodeURIComponent(zipName + '.zip')}`;
 }
 
 function loadModelList(models) {
@@ -225,12 +240,11 @@ function loadModel(model) {
   const project = typeof model === 'object' ? model.project : id.split('/')[0];
 
   if (typeof model === 'object' && model.legacy) {
-    baseUrl = `/models/${model.project}/${model.model}`;
     const objPath = model.objPath || '';
     const objDir = objPath.includes('/') ? objPath.substring(0, objPath.lastIndexOf('/') + 1) : '';
     const objFile = objPath.includes('/') ? objPath.substring(objPath.lastIndexOf('/') + 1) : objPath;
     objBase = objFile.replace(/\.obj$/i, '');
-    baseUrl = `/models/${model.project}/${model.model}/${objDir}`.replace(/\/+/g, '/');
+    baseUrl = `${base}models/${model.project}/${model.model}/${objDir}`.replace(/\/+/g, '/');
     objUrl = `${baseUrl}${objFile}`.replace(/\/+/g, '/');
   } else {
     const wantHigh = resolutionPreference === 'high';
@@ -241,7 +255,7 @@ function loadModel(model) {
     const objDir = objPath.includes('/') ? objPath.substring(0, objPath.lastIndexOf('/') + 1) : '';
     const objFile = objPath.includes('/') ? objPath.substring(objPath.lastIndexOf('/') + 1) : objPath;
     objBase = objFile.replace(/\.obj$/i, '');
-    baseUrl = `/models/${project}/${zipName}/${objDir}`.replace(/\/+/g, '/');
+    baseUrl = `${base}models/${project}/${zipName}/${objDir}`.replace(/\/+/g, '/');
     objUrl = `${baseUrl}${objFile}`.replace(/\/+/g, '/');
   }
 

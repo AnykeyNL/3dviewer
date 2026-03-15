@@ -101,16 +101,5 @@
       }
     });
   </script>
-  <script type="module">
-    fetch('/logo.json').then(r => r.ok ? r.json() : null).then(data => {
-      if (data?.path) {
-        const img = document.getElementById('header-logo');
-        img.src = data.t ? `${data.path}?t=${data.t}` : data.path;
-        img.alt = 'Logo';
-        img.classList.remove('hidden');
-        document.getElementById('header-title').classList.add('hidden');
-      }
-    }).catch(() => {});
-  </script>
 </body>
 </html>

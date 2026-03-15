@@ -1,3 +1,5 @@
+const base = (import.meta.env.BASE_URL || '/').replace(/\/*$/, '/');
+
 const rescanBtn = document.getElementById('rescan-btn');
 const rescanStatus = document.getElementById('rescan-status');
 const modelsList = document.getElementById('models-list');
@@ -9,7 +11,7 @@ const logoPreview = document.getElementById('logo-preview');
 
 async function loadModelsList() {
   try {
-    const res = await fetch('/models.json');
+    const res = await fetch(`${base}models.json`);
     const models = await res.json();
     const list = Array.isArray(models) ? models : [];
     const labels = list.map((m) => (typeof m === 'object' && m.id ? m.id : m));
@@ -30,7 +32,7 @@ rescanBtn.addEventListener('click', async () => {
   rescanStatus.className = 'rescan-status';
 
   try {
-    const res = await fetch('/api/rescan-models', { method: 'POST' });
+    const res = await fetch(`${base}api/rescan-models`, { method: 'POST' });
     const text = await res.text();
 
     if (!text) {
@@ -83,7 +85,7 @@ logoSaveBtn.addEventListener('click', async () => {
   const reader = new FileReader();
   reader.onload = async () => {
     try {
-      const res = await fetch('/api/save-logo', {
+      const res = await fetch(`${base}api/save-logo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ logo: reader.result }),
@@ -109,7 +111,7 @@ logoRemoveBtn.addEventListener('click', async () => {
   logoStatus.textContent = 'Removing...';
   logoStatus.className = 'rescan-status';
   try {
-    const res = await fetch('/api/remove-logo', { method: 'POST' });
+    const res = await fetch(`${base}api/remove-logo`, { method: 'POST' });
     const text = await res.text();
     const data = text ? JSON.parse(text) : {};
     if (!res.ok) throw new Error(data.error || 'Remove failed');
@@ -128,10 +130,10 @@ logoRemoveBtn.addEventListener('click', async () => {
 
 async function loadLogoPreview() {
   try {
-    const res = await fetch('/logo.json');
+    const res = await fetch(`${base}logo.json`);
     if (res.ok) {
       const { path } = await res.json();
-      logoPreview.innerHTML = `<img src="${path}?t=${Date.now()}" alt="Current logo" class="logo-preview-img" />`;
+      logoPreview.innerHTML = `<img src="${base}${path.replace(/^\//, '')}?t=${Date.now()}" alt="Current logo" class="logo-preview-img" />`;
     } else {
       logoPreview.innerHTML = '<p class="logo-none">No logo set</p>';
     }

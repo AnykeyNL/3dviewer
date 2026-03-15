@@ -112,6 +112,7 @@ function copyDirSync(src, dest) {
 
 export default defineConfig({
   root: '.',
+  base: process.env.BASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/models/' : '/'),
   publicDir: 'public',
   build: {
     rollupOptions: {

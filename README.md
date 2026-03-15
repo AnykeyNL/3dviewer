@@ -62,7 +62,7 @@ Output is in the `dist/` folder.
 
 ## Production (Apache)
 
-To run behind Apache:
+The app is built to run at `/models` (e.g. https://yoursite.com/models/).
 
 1. Build and start the Node server:
    ```bash
@@ -71,13 +71,16 @@ To run behind Apache:
    ```
    The server runs on port 3000 by default (set `PORT` env var to change).
 
-2. Configure Apache to proxy to the Node server. See `apache.conf.example`:
+2. Add the proxy config to your Apache SSL vhost (e.g. `3dmij.nl-le-ssl.conf`). See `apache-3dmij.conf`:
    ```apache
    ProxyPreserveHost On
-   ProxyPass / http://127.0.0.1:3000/
-   ProxyPassReverse / http://127.0.0.1:3000/
+   RedirectMatch 301 ^/models$ /models/
+   ProxyPass /models/ http://127.0.0.1:3000/
+   ProxyPassReverse /models/ http://127.0.0.1:3000/
    ```
 
 3. Enable mod_proxy: `a2enmod proxy proxy_http`
 
-4. Keep the Node process running (e.g. with systemd, pm2, or screen).
+4. Reload Apache: `systemctl reload apache2`
+
+5. Keep the Node process running (e.g. with systemd, pm2, or screen).
