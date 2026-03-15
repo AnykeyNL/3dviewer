@@ -1,0 +1,22 @@
+# Apache configuration for 3D Model Viewer
+# Proxy API, models, and admin to the Node.js server
+#
+# 1. Build: npm run build
+# 2. Start server: npm start  (runs on port 3000 by default)
+# 3. Enable mod_proxy and mod_proxy_http: a2enmod proxy proxy_http
+# 4. Include this config in your VirtualHost or add to .htaccess (if AllowOverride allows)
+
+# Proxy all requests to the Node.js server
+ProxyPreserveHost On
+ProxyPass / http://127.0.0.1:3000/
+ProxyPassReverse / http://127.0.0.1:3000/
+
+# Alternative: Proxy only specific paths (if Node runs alongside other content)
+# ProxyPass /api/ http://127.0.0.1:3000/api/
+# ProxyPassReverse /api/ http://127.0.0.1:3000/api/
+# ProxyPass /models/ http://127.0.0.1:3000/models/
+# ProxyPassReverse /models/ http://127.0.0.1:3000/models/
+# ProxyPass /admin http://127.0.0.1:3000/admin
+# ProxyPassReverse /admin http://127.0.0.1:3000/admin
+# ProxyPass /admin.html http://127.0.0.1:3000/admin.html
+# ProxyPassReverse /admin.html http://127.0.0.1:3000/admin.html

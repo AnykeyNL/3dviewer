@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>3D Model Viewer</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <script>
+    (function() {
+      function setViewportHeight() {
+        var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        document.documentElement.style.setProperty('--vvh', h + 'px');
+      }
+      setViewportHeight();
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', setViewportHeight);
+        window.visualViewport.addEventListener('scroll', setViewportHeight);
+      }
+      window.addEventListener('resize', setViewportHeight);
+      window.addEventListener('orientationchange', function() { setTimeout(setViewportHeight, 100); });
+      window.addEventListener('load', function() { setTimeout(setViewportHeight, 0); });
+    })();
+  </script>
+</head>
+<body>
+  <div class="project-prompt-overlay" id="project-prompt-overlay">
+    <div class="project-prompt">
+      <h2>Enter Project Name</h2>
+      <input type="text" id="project-input" placeholder="Project name" autocomplete="off" />
+      <button type="button" id="project-submit">Continue</button>
+      <p class="project-error hidden" id="project-error">Incorrect project</p>
+    </div>
+  </div>
+  <header class="menu-bar">
+    <div class="menu-bar-left">
+      <button type="button" class="models-toggle" id="models-toggle" aria-label="Toggle model list">
+        <span class="models-toggle-icon"></span>
+      </button>
+      <div class="logo-container" id="logo-container">
+        <img id="header-logo" class="header-logo hidden" alt="" />
+        <h1 id="header-title" class="header-title">3D Model Viewer</h1>
+      </div>
+    </div>
+    <div class="menu-bar-center menu-actions">
+      <button type="button" class="project-change hidden" id="project-change" title="Change project">Project: <span id="project-name"></span></button>
+      <div class="material-mode-toggle" role="group" aria-label="Material display">
+        <label class="material-mode-option"><input type="radio" name="material-mode" value="texture" checked /><span>Texture</span></label>
+        <label class="material-mode-option"><input type="radio" name="material-mode" value="plain" /><span>Plain</span></label>
+      </div>
+      <div class="resolution-toggle" role="group" aria-label="Model resolution">
+        <label class="resolution-option"><input type="radio" name="resolution" value="low" checked /><span>Low</span></label>
+        <label class="resolution-option"><input type="radio" name="resolution" value="high" /><span>High</span></label>
+      </div>
+    </div>
+    <div class="menu-bar-right"></div>
+  </header>
+
+  <aside class="model-list" id="model-list-panel">
+    <h2 id="model-list-title">Models</h2>
+    <ul id="model-list"></ul>
+    <p class="project-error-msg hidden" id="project-error-msg">Incorrect project</p>
+  </aside>
+  <div class="model-list-backdrop" id="model-list-backdrop" aria-hidden="true"></div>
+
+  <main class="viewer">
+    <canvas id="canvas"></canvas>
+    <div id="loading" class="loading hidden">Loading...</div>
+    <div id="empty" class="empty-state">Select a model from the list</div>
+    <div class="viewer-instructions">
+      <span>Rotate: Left drag</span>
+      <span>Pan: Right drag</span>
+      <span>Zoom: Scroll</span>
+    </div>
+    <div class="viewer-coords" id="viewer-coords">X: 0.00  Y: 0.00  Z: 0.00</div>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+  <script type="module">
+    const toggle = document.getElementById('models-toggle');
+    const panel = document.getElementById('model-list-panel');
+    const backdrop = document.getElementById('model-list-backdrop');
+    function toggleModels() {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) {
+        panel.classList.toggle('open');
+        backdrop.classList.toggle('visible');
+        backdrop.setAttribute('aria-hidden', panel.classList.contains('open') ? 'false' : 'true');
+      } else {
+        document.body.classList.toggle('list-collapsed');
+      }
+    }
+    toggle?.addEventListener('click', toggleModels);
+    backdrop?.addEventListener('click', () => { panel?.classList.remove('open'); backdrop?.classList.remove('visible'); document.body.classList.remove('list-collapsed'); backdrop?.setAttribute('aria-hidden', 'true'); });
+    window.addEventListener('resize', () => {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) {
+        document.body.classList.remove('list-collapsed');
+      } else {
+        panel?.classList.remove('open');
+        backdrop?.classList.remove('visible');
+      }
+    });
+  </script>
+  <script type="module">
+    fetch('/logo.json').then(r => r.ok ? r.json() : null).then(data => {
+      if (data?.path) {
+        const img = document.getElementById('header-logo');
+        img.src = data.t ? `${data.path}?t=${data.t}` : data.path;
+        img.alt = 'Logo';
+        img.classList.remove('hidden');
+        document.getElementById('header-title').classList.add('hidden');
+      }
+    }).catch(() => {});
+  </script>
+</body>
+</html>

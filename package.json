@@ -1,0 +1,21 @@
+{
+  "name": "3d-view",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server.js",
+    "generate-models": "node scripts/generate-models-json.js",
+    "migrate-models": "node scripts/migrate-to-project-structure.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "express": "^4.22.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

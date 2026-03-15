@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - 3D Model Viewer</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="stylesheet" href="/src/admin.css">
+</head>
+<body class="admin-page">
+  <header class="menu-bar">
+    <h1>Admin</h1>
+    <a href="/" class="back-link">← Back to Viewer</a>
+  </header>
+
+  <main class="admin-content">
+    <section class="admin-card">
+      <h2>Logo</h2>
+      <p class="admin-description">Upload a logo to display in the top left corner of the viewer instead of the default text.</p>
+      <div class="logo-upload">
+        <input type="file" id="logo-input" accept="image/png,image/jpeg,image/svg+xml,image/gif" />
+        <button id="logo-save-btn" class="rescan-btn" disabled>Save Logo</button>
+        <button id="logo-remove-btn" class="logo-remove-btn">Remove Logo</button>
+      </div>
+      <div id="logo-status" class="rescan-status"></div>
+      <div id="logo-preview" class="logo-preview"></div>
+    </section>
+    <section class="admin-card">
+      <h2>Models</h2>
+      <p class="admin-description">Rescan the models folder to detect newly added models. The model list will be updated and the viewer will show the new models on next load.</p>
+      <button id="rescan-btn" class="rescan-btn">Rescan Models</button>
+      <div id="rescan-status" class="rescan-status"></div>
+      <div id="models-list" class="models-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/admin.js"></script>
+</body>
+</html>
